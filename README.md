@@ -1,4 +1,3 @@
-Authour of Yii2-Imap is looking for a full-time job (Remote). More about my profile - https://roopz.club
 
 yii2 Imap
 ==========
@@ -9,14 +8,14 @@ Installation by composer
 ```composer
 {
     "require": {
-       "roopz/yii2-imap": "dev-master"
+       "d3yii2/d3imap": "dev-master"
     }
 }
 ```
 
 Or
 ```
-$ composer require roopz/yii2-imap "dev-master"
+$ composer require d3yii2/d3imap "dev-master"
 ```
 
 ### Config example
@@ -34,12 +33,4 @@ $ composer require roopz/yii2-imap "dev-master"
         'decodeMimeStr' => false
     ]
 ]
-```
 
-#Authour of Yii2-Imap is looking for a full-time job (Remote). More about my profile - [Click here](https://roopz.club)
-
-# Contribute
-Feel free to contribute. If you have ideas for examples, add them to the repo and send in a pull request.
-
-# Apreciate
-Dont forget to Leave me a "star" if you like it. Enjoy coding!

@@ -4,7 +4,7 @@
     "prefer-stable": "true",
     "description": "yii2 extension to read and process mails from IMAP with PHP-IMAP wrapper",
     "keywords": ["yii2", "extension", "widget", "imap", "cron", "mail", "inbox"],
-    "homepage": "https://github.com/yiioverflow/yii2-imap.git",
+    "homepage": "https://github.com/d3yii2/d3imap",
     "type": "yii2-extension",
     "license": "BSD-3-Clause",
     "authors": [
