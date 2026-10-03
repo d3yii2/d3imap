@@ -3,64 +3,77 @@
 namespace d3yii2\d3imap;
 
 /**
-   *Copyright (c) 2012 by Barbushin Sergey <barbushin@gmail.com>.
-   *All rights reserved.
-*/
+ * Copyright (c) 2012 by Barbushin Sergey <barbushin@gmail.com>.
+ * All rights reserved.
+ */
+class IncomingMail
+{
+    /** @var int IMAP UID */
+    public $id;
 
-class IncomingMail {
+    /** @var string Y-m-d H:i:s in the PHP default timezone */
+    public $date;
+    public $subject;
 
-	public $id;
-	public $date;
-	public $subject;
+    public $fromName;
+    public $fromAddress;
 
-	public $fromName;
-	public $fromAddress;
+    /** @var array email => name|null */
+    public $to = [];
+    public $toString;
 
-	public $to = array();
-	public $toString;
-	public $cc = array();
-	public $replyTo = array();
+    /** @var array email => name|null */
+    public $cc = [];
 
-	public $textPlain;
-	public $textHtml;
-	/** @var IncomingMailAttachment[] */
-	protected $attachments = array();
+    /** @var array email => name|null */
+    public $replyTo = [];
 
-	public function addAttachment(IncomingMailAttachment $attachment) {
-		$this->attachments[$attachment->id] = $attachment;
-	}
+    public $textPlain;
+    public $textHtml;
 
-	/**
-	 * @return IncomingMailAttachment[]
-	 */
-	public function getAttachments() {
-		return $this->attachments;
-	}
+    /** @var string Message-ID header with angle brackets, ASCII only */
+    public $messageId;
 
-	/**
-	 * Get array of internal HTML links placeholders
-	 * @return array attachmentId => link placeholder
-	 */
-	public function getInternalLinksPlaceholders() {
-		return preg_match_all('/=["\'](ci?d:([\w\.%*@-]+))["\']/i', $this->textHtml, $matches) ? array_combine($matches[2], $matches[1]) : array();
+    /** @var IncomingMailAttachment[] */
+    protected $attachments = [];
 
-	}
+    public function addAttachment(IncomingMailAttachment $attachment)
+    {
+        $this->attachments[$attachment->id] = $attachment;
+    }
 
-	public function replaceInternalLinks($baseUri) {
-		$baseUri = rtrim($baseUri, '\\/') . '/';
-		$fetchedHtml = $this->textHtml;
-		foreach($this->getInternalLinksPlaceholders() as $attachmentId => $placeholder) {
-			if(isset($this->attachments[$attachmentId])) {
-				$fetchedHtml = str_replace($placeholder, $baseUri . basename($this->attachments[$attachmentId]->filePath), $fetchedHtml);
-			}
-		}
-		return $fetchedHtml;
-	}
-}
+    /**
+     * @return IncomingMailAttachment[]
+     */
+    public function getAttachments()
+    {
+        return $this->attachments;
+    }
 
-class IncomingMailAttachment {
+    /**
+     * Get array of internal HTML links placeholders
+     * @return array attachmentId => link placeholder
+     */
+    public function getInternalLinksPlaceholders()
+    {
+        return preg_match_all('/=["\'](ci?d:([\w\.%*@-]+))["\']/i', (string)$this->textHtml, $matches)
+            ? array_combine($matches[2], $matches[1])
+            : [];
+    }
 
-	public $id;
-	public $name;
-	public $filePath;
+    public function replaceInternalLinks($baseUri)
+    {
+        $baseUri = rtrim($baseUri, '\\/') . '/';
+        $fetchedHtml = $this->textHtml;
+        foreach ($this->getInternalLinksPlaceholders() as $attachmentId => $placeholder) {
+            if (isset($this->attachments[$attachmentId])) {
+                $fetchedHtml = str_replace(
+                    $placeholder,
+                    $baseUri . basename($this->attachments[$attachmentId]->filePath),
+                    $fetchedHtml
+                );
+            }
+        }
+        return $fetchedHtml;
+    }
 }

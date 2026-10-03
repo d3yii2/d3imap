@@ -13,11 +13,16 @@
     ],
     "require": {
         "php": ">=8.4",
-        "webklex/php-imap": "*"
+        "webklex/php-imap": "^6.2"
     },
     "autoload": {
         "psr-4": {
             "d3yii2\\d3imap\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "d3yii2\\d3imap\\tests\\": "tests/"
         }
     }
 }

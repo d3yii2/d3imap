@@ -1,0 +1,7 @@
+From: sender@example.com
+To: receiver@example.com
+Subject: Without date and message id
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+Body.

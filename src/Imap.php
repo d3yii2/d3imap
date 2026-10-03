@@ -3,94 +3,93 @@
 namespace d3yii2\d3imap;
 
 use Yii;
-use d3yii2\d3imap\Mailbox;
-use yii\base\Exception;
+use yii\base\Component;
 use yii\base\InvalidConfigException;
-
-/**
- * Copyright (c) 2015 by Roopan Valiya Veetil <yiioverflow@gmail.com>.
- * All rights reserved.
- * Date : 29-07-2015
- * Time : 5:20 PM
- * Class can be used for connecting and extracting Email messages.
- */
 
 /**
  * Imap Component
  *
- * To use Imap, you should configure it in the application configuration like the following,
- *
  * ~~~
  * 'components' => [
- *     ...
  *     'imap' => [
- *         'class' => 'vendor\roopz\yii2-imap\Imap',
+ *         'class' => \d3yii2\d3imap\Imap::class,
  *         'connection' => [
  *             'imapPath' => '{imap.gmail.com:993/imap/ssl}INBOX',
  *             'imapLogin' => 'username',
  *             'imapPassword' => 'password',
- *             'serverEncoding' => 'encoding', // utf-8 default.
- *             'searchEncoding' => 'encoding',//MIME character set to use when searching strings
- *             'decodeMimeStr' => false // Return as is, default -> true
+ *             'serverEncoding' => 'utf-8',
+ *             'attachmentsDir' => '@runtime/imap',
  *         ],
  *     ],
- *     ...
  * ],
  * ~~~
-**/
-
-class Imap extends Mailbox
+ *
+ * Usage: $uids = Yii::$app->imap->getMailbox()->searchMailboxUnseen();
+ */
+class Imap extends Component
 {
-    private $_connection = [];
+    private array $connectionParams = [];
+    private ?ImapConnection $connection = null;
+    private ?Mailbox $mailbox = null;
 
     /**
-     * @param array
-     * @throws InvalidConfigException on invalid argument.
+     * @param array $connectionParams ImapConnection property values
+     * @throws InvalidConfigException
      */
-    public function setConnection($connection)
+    public function setConnection($connectionParams): void
     {
-        if (!is_array($connection)) {
-            throw new InvalidConfigException('You should set connection params in your config. Please read yii2-imap doc for more info');
+        if (!is_array($connectionParams)) {
+            throw new InvalidConfigException('You should set connection params in your config. Please read d3imap README');
         }
-        $this->_connection = $connection;
+        $this->connectionParams = $connectionParams;
+        $this->connection = null;
+        $this->mailbox = null;
     }
 
     /**
-     * @return array
+     * @throws InvalidConfigException
      */
-    public function getConnection()
+    public function getConnection(): ImapConnection
     {
-        if ($this->_connection instanceof Imap) {
-            return $this->_connection;
+        if ($this->connection === null) {
+            $this->connection = $this->createConnection();
         }
-        $this->_connection = $this->createConnection();
-        return $this->_connection;
+
+        return $this->connection;
     }
 
     /**
-     * @return $this
-     * @throws Exception
+     * @throws InvalidConfigException
      */
-    public function createConnection()
+    public function createConnection(): ImapConnection
     {
-        $this->imapPath = $this->_connection['imapPath'];
-        $this->imapLogin = $this->_connection['imapLogin'];
-        $this->imapPassword = $this->_connection['imapPassword'];
-        $this->serverEncoding = $this->_connection['serverEncoding'];
-        $this->attachmentsDir = $this->_connection['attachmentsDir'];
-        //Optional decoding of the MIME-string
-        if (isset($this->_connection['decodeMimeStr'])) {
-            $this->decodeMimeStr = $this->_connection['decodeMimeStr'];
-        }
-        //MIME character set to use when searching strings
-        $this->searchEncoding = $this->_connection['searchEncoding'] ?? $this->_connection['serverEncoding'];
-
-        if ($this->attachmentsDir) {
-            if (!is_dir($this->attachmentsDir)) {
-                throw new Exception('Directory "' . $this->attachmentsDir . '" not found');
+        $imapConnection = new ImapConnection();
+        foreach ($this->connectionParams as $name => $value) {
+            if (!property_exists($imapConnection, $name)) {
+                throw new InvalidConfigException('Unknown IMAP connection param "' . $name . '"');
             }
-            $this->attachmentsDir = rtrim(realpath($this->attachmentsDir), '\\/');
+            $imapConnection->$name = $value;
         }
-        return $this;
+        if ($imapConnection->attachmentsDir) {
+            $attachmentsDir = Yii::getAlias($imapConnection->attachmentsDir);
+            if (!is_dir($attachmentsDir)) {
+                throw new InvalidConfigException('Directory "' . $attachmentsDir . '" not found');
+            }
+            $imapConnection->attachmentsDir = rtrim(realpath($attachmentsDir), '\\/');
+        }
+
+        return $imapConnection;
+    }
+
+    /**
+     * @throws InvalidConfigException
+     */
+    public function getMailbox(): Mailbox
+    {
+        if ($this->mailbox === null) {
+            $this->mailbox = new Mailbox($this->getConnection());
+        }
+
+        return $this->mailbox;
     }
 }

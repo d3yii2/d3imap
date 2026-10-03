@@ -1,0 +1,44 @@
+Return-Path: <janis.berzins@example.com>
+Message-ID: <abc.123@example.com>
+Date: Tue, 01 Oct 2024 10:15:30 +0300
+From: =?UTF-8?Q?J=C4=81nis_B=C4=93rzi=C5=86=C5=A1?= <Janis.Berzins@Example.COM>
+To: Anna Liepa <anna@example.com>, peter@example.org
+Cc: "Cc Person" <CC@example.com>
+Reply-To: Reply Desk <reply@example.com>
+Subject: =?UTF-8?B?UsSTxLdpbnMgTnIuIDEyMyDigJMgdGVzdA==?=
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="mixed-boundary"
+
+--mixed-boundary
+Content-Type: multipart/alternative; boundary="alt-boundary"
+
+--alt-boundary
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Labdien! R=C4=93=C4=B7ins pielikum=C4=81.
+
+--alt-boundary
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<p><b>Labdien!</b> R=C4=93=C4=B7ins pielikum=C4=81.</p><img src=3D"cid:logo@example.com">
+
+--alt-boundary--
+
+--mixed-boundary
+Content-Type: application/pdf
+Content-Disposition: attachment; filename*=UTF-8''r%C4%93%C4%B7ins.pdf
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjQKJSBkM2ltYXAgdGVzdAoxIDAgb2JqIDw8L1R5cGUvQ2F0YWxvZz4+IGVuZG9iagp0cmFpbGVyIDw8L1Jvb3QgMSAwIFI+PgolJUVPRgo=
+
+--mixed-boundary
+Content-Type: image/png
+Content-Disposition: inline
+Content-ID: <logo@example.com>
+Content-Transfer-Encoding: base64
+
+iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==
+
+--mixed-boundary--
